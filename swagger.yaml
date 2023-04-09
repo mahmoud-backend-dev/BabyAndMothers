@@ -1,0 +1,167 @@
+openapi: 3.0.0
+info:
+  title: Babies And Mothers
+  description: "Tasting API Development By Mahmoud Hamdi"
+  contact: {}
+  version: '1.0'
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+servers:
+- url: https://baby-and-mother-1812.onrender.com/api/v1/auth
+  variables: {}
+paths:
+  /signup:
+    post:
+      tags:
+      - Authentication
+      summary: Signup With Reset code
+      operationId: SignupWithResetcode
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/SignupWithResetcodeRequest'
+              - examples:
+                - email: mohamedasmr98@gmail.com
+                  firstName: Amr
+                  lastName: H
+                  password: '123456'
+                  confirmPassword: '123456'
+              contentMediaType: application/json
+            example:
+              email: mohamedasmr98@gmail.com
+              firstName: Amr
+              lastName: H
+              password: '123456'
+              confirmPassword: '123456'
+        required: true
+      responses:
+        '201':
+          description: ''
+          headers: {}
+      deprecated: false
+    parameters: []
+  /login:
+    post:
+      tags:
+      - Authentication
+      summary: Login
+      operationId: Login
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/LoginRequest'
+              - examples:
+                - email: amr.flutter.dev@gmail.com
+                  password: '123456'
+              contentMediaType: application/json
+            example:
+              email: amr.flutter.dev@gmail.com
+              password: '123456'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    parameters: []
+  /varifyResetCode:
+    post:
+      tags:
+      - Authentication
+      summary: Varify Reset Code
+      operationId: VarifyResetCode
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/VarifyResetCodeRequest'
+              - examples:
+                - resetCode: '683614'
+              contentMediaType: application/json
+            example:
+              resetCode: '683614'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    parameters: []
+  /google:
+    get:
+      tags:
+      - Authentication
+      summary: Login With Google
+      operationId: LoginWithGoogle
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    parameters: []
+components:
+  schemas:
+    SignupWithResetcodeRequest:
+      title: SignupWithResetcodeRequest
+      required:
+      - email
+      - firstName
+      - lastName
+      - password
+      - confirmPassword
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+      examples:
+      - email: mohamedasmr98@gmail.com
+        firstName: Amr
+        lastName: H
+        password: '123456'
+        confirmPassword: '123456'
+    LoginRequest:
+      title: LoginRequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      examples:
+      - email: amr.flutter.dev@gmail.com
+        password: '123456'
+    VarifyResetCodeRequest:
+      title: VarifyResetCodeRequest
+      required:
+      - resetCode
+      type: object
+      properties:
+        resetCode:
+          type: string
+      examples:
+      - resetCode: '683614'
+tags:
+- name: Misc
+  description: ''

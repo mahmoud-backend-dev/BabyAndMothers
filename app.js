@@ -16,7 +16,9 @@ const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const MongoStore = require('connect-mongo');
-
+const swaggerUI = require('swagger-ui-express');
+const yaml = require('yamljs');
+const swaggerDocument = yaml.load('./swagger.yaml');
 configPassport();
 
 // configure session middleware
@@ -34,6 +36,12 @@ app.options('*', cors());
 
 // Compress all responses
 app.use(compression());
+
+
+
+// setup swagger ui
+app.get('/', (req, res) => res.redirect('/api-docs'));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use(passport.initialize());
 app.use(passport.session());
