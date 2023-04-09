@@ -17,4 +17,6 @@ router.patch("/update/:id", weeksController.updateWeek);
 
 router.delete("/delete/:id", weeksController.deleteWeek);
 
+router.post("/upload/img");
+
 module.exports = router;
