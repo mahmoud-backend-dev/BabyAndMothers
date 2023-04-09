@@ -9,9 +9,8 @@ const authenticatedMiddleware = async (req, res, next) => {
     
     const token = authHeader.split(' ')[1];
     try {
-        const decoded = jwt.verify(token, process.env.SECRET_KEY)
-        const { pharmacyId,pharmacyName } = decoded;
-        req.user = { pharmacyId , pharmacyName };
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        req.user = decoded;
         next()
         //console.log(req.user);
     } catch (error) {
