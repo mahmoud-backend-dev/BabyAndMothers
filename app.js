@@ -15,13 +15,16 @@ const reteLimiter = require('express-rate-limit');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const MongoStore = require('connect-mongo');
+
 configPassport();
 
 // configure session middleware
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.URI })
 }));
 
 // Enable other domains to access your application
