@@ -1,7 +1,6 @@
 {
   "name": "babiesandmothers-project",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -30,5 +29,17 @@
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "xss-clean": "^0.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-hamdy1572/BabyAndMothers.git"
+  },
+  "bugs": {
+    "url": "https://github.com/m-hamdy1572/BabyAndMothers/issues"
+  },
+  "homepage": "https://github.com/m-hamdy1572/BabyAndMothers#readme",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
