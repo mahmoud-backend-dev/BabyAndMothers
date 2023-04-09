@@ -163,5 +163,5 @@ components:
       examples:
       - resetCode: '683614'
 tags:
-- name: Misc
+- name: Authentication
   description: ''
