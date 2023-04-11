@@ -142,7 +142,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
   /posts/{id}:
     patch:
       tags:
@@ -179,7 +180,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
   /posts/{id}/like:
     get:
       tags:
@@ -199,8 +201,6 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security:
-      - bearer: []
     post:
       tags:
       - Community
@@ -219,7 +219,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
     delete:
       tags:
       - Community
@@ -238,7 +239,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
   /posts/{id}/comment:
     get:
       tags:
@@ -258,8 +260,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security:
-      - bearer: []
+      security: []
     post:
       tags:
       - Community
@@ -290,7 +291,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
     patch:
       tags:
       - Community
@@ -321,7 +323,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
   /posts/{idPost}/comment/{id]:
     delete:
       tags:
@@ -341,7 +344,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
   /weeks/add:
     post:
       tags:
@@ -372,7 +376,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
   /weeks/search/{id}:
     get:
       tags:
@@ -425,7 +430,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
   /weeks/delete/{id}:
     delete:
       tags:
@@ -445,7 +451,8 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-      security: []
+      security:
+      - bearer: []
 components:
   schemas:
     SignupWithResetcodeRequest:
