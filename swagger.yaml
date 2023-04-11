@@ -1,15 +1,15 @@
 openapi: 3.0.0
 info:
   title: Babies And Mothers
-  description: "Tasting API Development By Mahmoud Hamdi"
   contact: {}
   version: '1.0'
-jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
 servers:
-- url: https://baby-and-mother-1812.onrender.com/api/v1/auth
+- url: https://baby-and-mother-1812.onrender.com/api/v1
+  variables: {}
+- url: http://localhost:1812/api/v1
   variables: {}
 paths:
-  /signup:
+  /auth/signup:
     post:
       tags:
       - Authentication
@@ -23,13 +23,12 @@ paths:
             schema:
               allOf:
               - $ref: '#/components/schemas/SignupWithResetcodeRequest'
-              - examples:
-                - email: mohamedasmr98@gmail.com
+              - example:
+                  email: mohamedasmr98@gmail.com
                   firstName: Amr
                   lastName: H
                   password: '123456'
                   confirmPassword: '123456'
-              contentMediaType: application/json
             example:
               email: mohamedasmr98@gmail.com
               firstName: Amr
@@ -38,12 +37,11 @@ paths:
               confirmPassword: '123456'
         required: true
       responses:
-        '201':
+        '200':
           description: ''
           headers: {}
       deprecated: false
-    parameters: []
-  /login:
+  /auth/login:
     post:
       tags:
       - Authentication
@@ -57,10 +55,9 @@ paths:
             schema:
               allOf:
               - $ref: '#/components/schemas/LoginRequest'
-              - examples:
-                - email: amr.flutter.dev@gmail.com
+              - example:
+                  email: amr.flutter.dev@gmail.com
                   password: '123456'
-              contentMediaType: application/json
             example:
               email: amr.flutter.dev@gmail.com
               password: '123456'
@@ -70,8 +67,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-    parameters: []
-  /varifyResetCode:
+  /auth/varifyResetCode:
     post:
       tags:
       - Authentication
@@ -85,9 +81,8 @@ paths:
             schema:
               allOf:
               - $ref: '#/components/schemas/VarifyResetCodeRequest'
-              - examples:
-                - resetCode: '683614'
-              contentMediaType: application/json
+              - example:
+                  resetCode: '683614'
             example:
               resetCode: '683614'
         required: true
@@ -96,8 +91,7 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-    parameters: []
-  /google:
+  /auth/google:
     get:
       tags:
       - Authentication
@@ -109,7 +103,350 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-    parameters: []
+  /posts:
+    get:
+      tags:
+      - Community
+      summary: Get All Posts
+      operationId: GetAllPosts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+      - Community
+      summary: Post
+      operationId: Post
+      parameters: []
+      requestBody:
+        content:
+          multipart/form-data:
+            encoding: {}
+            schema:
+              required:
+              - text
+              - image
+              type: object
+              properties:
+                text:
+                  type: string
+                  example: hasdsadasdjasdas55sad35as
+                image:
+                  type: string
+                  format: binary
+        required: false
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /posts/{id}:
+    patch:
+      tags:
+      - Community
+      summary: Update My Posts
+      operationId: UpdateMyPosts
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            encoding: {}
+            schema:
+              required:
+              - text
+              - image
+              type: object
+              properties:
+                text:
+                  type: string
+                  example: Test Two
+                image:
+                  type: string
+                  format: binary
+        required: false
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /posts/{id}/like:
+    get:
+      tags:
+      - Community
+      summary: Get All Likes for this post
+      operationId: GetAllLikesforthispost
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    post:
+      tags:
+      - Community
+      summary: Add Like Post
+      operationId: AddLikePost
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+    delete:
+      tags:
+      - Community
+      summary: Remove Like From Post
+      operationId: RemoveLikeFromPost
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /posts/{id}/comment:
+    get:
+      tags:
+      - Community
+      summary: Get All Comment for this post
+      operationId: GetAllCommentforthispost
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    post:
+      tags:
+      - Community
+      summary: Add Comment To Post
+      operationId: AddCommentToPost
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/AddCommentToPostRequest'
+              - example:
+                  text: Nice comment
+            example:
+              text: Nice comment
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+    patch:
+      tags:
+      - Community
+      summary: Update Comment To Post
+      operationId: UpdateCommentToPost
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateCommentToPostRequest'
+              - example:
+                  text: Nice comment Test
+            example:
+              text: Nice comment Test
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /posts/{idPost}/comment/{id]:
+    delete:
+      tags:
+      - Community
+      summary: Remove Comment From Post
+      operationId: RemoveCommentFromPost
+      parameters:
+      - name: idPost
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /weeks/add:
+    post:
+      tags:
+      - Weeks
+      summary: Create Week
+      operationId: CreateWeek
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/CreateWeekRequest'
+              - example:
+                  title: l
+                  week: frist week
+                  headline: Advice
+                  content: AAAA
+            example:
+              title: l
+              week: frist week
+              headline: Advice
+              content: AAAA
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /weeks/search/{id}:
+    get:
+      tags:
+      - Weeks
+      summary: Read Week
+      operationId: ReadWeek
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /weeks/update/{id}:
+    patch:
+      tags:
+      - Weeks
+      summary: Update Week
+      operationId: UpdateWeek
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateWeekRequest'
+              - example:
+                  title: Mango
+                  content: AAAA
+            example:
+              title: Mango
+              content: AAAA
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /weeks/delete/{id}:
+    delete:
+      tags:
+      - Weeks
+      summary: Delete Week
+      operationId: DeleteWeek
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
 components:
   schemas:
     SignupWithResetcodeRequest:
@@ -132,8 +469,8 @@ components:
           type: string
         confirmPassword:
           type: string
-      examples:
-      - email: mohamedasmr98@gmail.com
+      example:
+        email: mohamedasmr98@gmail.com
         firstName: Amr
         lastName: H
         password: '123456'
@@ -149,8 +486,8 @@ components:
           type: string
         password:
           type: string
-      examples:
-      - email: amr.flutter.dev@gmail.com
+      example:
+        email: amr.flutter.dev@gmail.com
         password: '123456'
     VarifyResetCodeRequest:
       title: VarifyResetCodeRequest
@@ -160,8 +497,70 @@ components:
       properties:
         resetCode:
           type: string
-      examples:
-      - resetCode: '683614'
+      example:
+        resetCode: '683614'
+    AddCommentToPostRequest:
+      title: AddCommentToPostRequest
+      required:
+      - text
+      type: object
+      properties:
+        text:
+          type: string
+      example:
+        text: Nice comment
+    UpdateCommentToPostRequest:
+      title: UpdateCommentToPostRequest
+      required:
+      - text
+      type: object
+      properties:
+        text:
+          type: string
+      example:
+        text: Nice comment Test
+    CreateWeekRequest:
+      title: CreateWeekRequest
+      required:
+      - title
+      - week
+      - headline
+      - content
+      type: object
+      properties:
+        title:
+          type: string
+        week:
+          type: string
+        headline:
+          type: string
+        content:
+          type: string
+      example:
+        title: l
+        week: frist week
+        headline: Advice
+        content: AAAA
+    UpdateWeekRequest:
+      title: UpdateWeekRequest
+      required:
+      - title
+      - content
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+      example:
+        title: Mango
+        content: AAAA
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
 tags:
 - name: Authentication
-  description: ''
+- name: Community
+- name: Weeks
