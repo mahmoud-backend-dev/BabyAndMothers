@@ -128,7 +128,6 @@ paths:
             schema:
               required:
               - text
-              - image
               type: object
               properties:
                 text:
