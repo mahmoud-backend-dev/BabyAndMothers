@@ -20,6 +20,7 @@ const googleAccountSchema = new mongoose.Schema({
 googleAccountSchema.methods.createJWT = function () {
   return jwt.sign({
     userId: this._id,
+    userName:`${this.firstName} ${this.lastName}`,
   },
     process.env.JWT_SECRET,
     {

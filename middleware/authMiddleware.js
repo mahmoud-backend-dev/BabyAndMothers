@@ -1,7 +1,7 @@
 const { UnauthenticatedError } = require('../errors');
 const jwt = require('jsonwebtoken');
 
-const authenticatedMiddleware = async (req, res, next) => {
+const authenticatedMiddleware =  async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer '))
@@ -12,7 +12,6 @@ const authenticatedMiddleware = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         req.user = decoded;
         next()
-        //console.log(req.user);
     } catch (error) {
         throw new UnauthenticatedError('Invalid Authentication web token ');
     }

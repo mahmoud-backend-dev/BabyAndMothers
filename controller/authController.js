@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { StatusCodes } = require('http-status-codes');
-const { CustomErrorAPI, BadRequest } = require('../errors');
+const { CustomErrorAPI, BadRequest, NotFoundError } = require('../errors');
 const asyncHandler = require('express-async-handler');
 const sendEmail = require('../utils/sendEmail');
 const User = require('../models/User');
@@ -61,6 +61,8 @@ exports.varifyResetCode = asyncHandler(async (req, res, next) => {
 
 exports.login = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
+  if (!user)
+    throw new NotFoundError(`No user such as this email: ${req.body.email}`);
   const isMatch = await user.comparePassword(req.body.password);
   if (!user || !isMatch)
     throw new BadRequest('E-mail or Password incorrect');

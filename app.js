@@ -1,4 +1,7 @@
 require('dotenv').config();
+// const path = require('path');
+require('express-async-errors');
+
 const express = require('express');
 const app = express();
 const port = 1812 | process.env.PORT;
@@ -19,6 +22,7 @@ const MongoStore = require('connect-mongo');
 const swaggerUI = require('swagger-ui-express');
 const yaml = require('yamljs');
 const swaggerDocument = yaml.load('./swagger.yaml');
+const postRoute = require('./routes/postRoute');
 configPassport();
 
 // configure session middleware
@@ -46,9 +50,12 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// To upload image local
+// app.use(express.static(path.join(__dirname, 'uploads')));
 
 
 // To remove data using these defaults, To apply data sanitization
@@ -72,7 +79,11 @@ app.use(limiter)
 app.use(hpp());
 
 
+
 app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/posts',postRoute);
+
+
 app.use(errorHandler);
 app.use(notFoundError);
 

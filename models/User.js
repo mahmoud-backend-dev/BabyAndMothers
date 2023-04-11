@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); 
 const userSchema = new mongoose.Schema({
-  googleId: String,
   email: {
     type: String,
     required: [true, 'E-mail is required'],
@@ -30,6 +29,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.createJWT = function () {
   return jwt.sign({
     userId: this._id,
+    userName:`${this.firstName} ${this.lastName}`,
   },
     process.env.JWT_SECRET,
     {

@@ -1,5 +1,5 @@
 const Week = require("../models/weeks-model");
-
+const { BadRequest } = require('../errors');
 exports.addWeek = async (req, res) => {
     const week = new Week(req.body);
 
@@ -32,7 +32,7 @@ exports.updateWeek = async (req, res) => {
     );
 
     if (!isValidOperation) {
-        return res.status(400).send({ error: "Invalid updates!" });
+        throw new BadRequest('Invalid updates!')
     }
 
     try {
