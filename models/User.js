@@ -20,9 +20,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Last namr is required'],
   },
-  hashedResetCode: String,
-  resetCodeExpired:Date,
-  resetVerify: Boolean,
+  hashedResetCodeForSignup: String,
+  resetCodeExpiredForSignup:Date,
+  resetVerifyForSignup: Boolean,
+  hashedResetCodeForPassword: String,
+  resetCodeExpiredForPassword:Date,
+  resetVerifyForPassword: Boolean,
   image: String,
 });
 

@@ -36,4 +36,15 @@ exports.loginValidator = [
 validatorMiddleWare,
 ]
 
+exports.forgetPasswordValidator = [
+  body('email').notEmpty().withMessage('E-mail is requied'),
+  validatorMiddleWare,
+]
+
+exports.resetPasswordValidator = [
+  body('email').notEmpty().withMessage('E-mail is requied'),
+  body('newPassword').notEmpty().withMessage('Password is requied'),
+  validatorMiddleWare,
+]
+
 

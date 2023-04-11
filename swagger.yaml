@@ -67,11 +67,11 @@ paths:
           description: ''
           headers: {}
       deprecated: false
-  /auth/varifyResetCode:
+  /auth/varifyResetCodeForSignup:
     post:
       tags:
       - Authentication
-      summary: Varify Reset Code
+      summary: Varify Reset Code For Signup
       operationId: VarifyResetCode
       parameters: []
       requestBody:
@@ -98,6 +98,77 @@ paths:
       summary: Login With Google
       operationId: LoginWithGoogle
       parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /auth/forgetPassword:
+    post:
+      tags:
+      - Authentication
+      summary: Forget Passwprd
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/ForgetPassword'
+              - example:
+                  email: amr.flutter.dev@gmail.com
+            example:
+              email: amr.flutter.dev@gmail.com
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /auth/varifyResetCodeForPassword:
+    post:
+      tags:
+      - Authentication
+      summary: Varify Reset Code For Password
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/VarifyResetCodeRequest'
+              - example:
+                  resetCode: '683614'
+            example:
+              resetCode: '683614'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /auth/resetPassword:
+    post:
+      tags:
+      - Authentication
+      summary: Reset Password
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/ResetPassword'
+              - example:
+                  email: amr.flutter.dev@gmail.com
+                  newPassword: '123456'
+            example:
+              email: amr.flutter.dev@gmail.com
+              newPassword: '123456'
+        required: true
       responses:
         '200':
           description: ''
@@ -495,6 +566,30 @@ components:
       example:
         email: amr.flutter.dev@gmail.com
         password: '123456'
+    ForgetPassword:
+      title: ForgetPassword
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          type: string
+      example:
+        email: amr.flutter.dev@gmail.com
+    ResetPassword:
+      title: ResetPassword
+      required:
+      - email
+      - newPassword
+      type: object
+      properties:
+        email:
+          type: string
+        newPassword:
+          type: string
+      example:
+        email: amr.flutter.dev@gmail.com
+        newPassword: '123456'
     VarifyResetCodeRequest:
       title: VarifyResetCodeRequest
       required:

@@ -10,7 +10,7 @@ const transportet = nodemailer.createTransport({
   }
 })
 
-module.exports = asyncHandler(async (mailOpts) => {
+module.exports = async (mailOpts) => {
   await transportet.sendMail(mailOpts);
-})
+};
 
