@@ -30,7 +30,7 @@ const multerOptions = (pathStoreImage) => {
 
 exports.uploadSingleImage = (fieldName, pathStoreImage) => multerOptions(pathStoreImage).single(fieldName);
 
-exports.uploadImageToCloudinary = asyncHandler(async (path) => {
+exports.uploadImageToCloudinary = async (path) => {
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
         api_key: process.env.CLOUD_API_KEY,
@@ -40,4 +40,4 @@ exports.uploadImageToCloudinary = asyncHandler(async (path) => {
     secure_url = data.secure_url;
     fs.unlinkSync(path);
     return secure_url;
-});
+};
