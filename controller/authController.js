@@ -23,7 +23,7 @@ let data = {};
 // @route POST api/v1/auth/signup
 // @protect Public
 exports.signup = asyncHandler(async (req, res, next) => {
-  const user = req.body
+  const user = new User(req.body);
   // Generate reset code 
   const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
   // hash reset code than store in db
@@ -45,29 +45,34 @@ exports.signup = asyncHandler(async (req, res, next) => {
     user.hashedResetCodeForSignup = undefined;
     user.resetCodeExpiredForSignup = undefined;
     user.resetVerifyForSignup = undefined;
-    data = user
+    await user.save();
     throw new CustomErrorAPI('There is an error in sending email', StatusCodes.INTERNAL_SERVER_ERROR);
   }
-  data = user
+  await user.save();
   res.status(StatusCodes.CREATED).json({ status: 'Success', message: 'Reset code sent to email' });
 });
 
 exports.varifyResetCodeForSignup = asyncHandler(async (req, res, next) => {
   const hashedResetCode = hashedResetCodeByCrypto(req.body.resetCode);
-
-  if ((data.hashedResetCodeForSignup !== hashedResetCode) || (data.resetCodeExpiredForSignup < Date.now()))
+  const user = await User.findOne({
+    email: req.body.email,
+    hashedResetCodeForSignup: hashedResetCode,
+    resetCodeExpiredForSignup: { $gt: Date.now() },
+  })
+  if (!user)
     throw new BadRequest('Reset code invalid or expired')
   
-  data.hashedResetCodeForSignup = undefined;
-  data.resetCodeExpiredForSignup = undefined;
-  data.resetVerifyForSignup = true;
-  const user = await User.create(data);
+  user.hashedResetCodeForSignup = undefined;
+  user.resetCodeExpiredForSignup = undefined;
+  user.resetVerifyForSignup = true;
   const token = user.createJWT()
   res.status(StatusCodes.OK).json({ message: "Success", token, data: santizeData(user) });
 });
 
 exports.login = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
+  if (user.hashedResetCodeForSignup)
+    throw new BadRequest('Verifiy reset code before login')
   if (!user)
     throw new NotFoundError(`No user such as this email: ${req.body.email}`);
   const isMatch = await user.comparePassword(req.body.password);
@@ -115,6 +120,7 @@ exports.varifyResetCodeForPassword = asyncHandler(async (req, res) => {
   const hashedResetCode = hashedResetCodeByCrypto(req.body.resetCode);
   // Get user based on reset code
   const user = await User.findOne({
+    email: req.body.email,
     hashedResetCodeForPassword: hashedResetCode,
     resetCodeExpiredForPassword: { $gt: Date.now() }
   });
