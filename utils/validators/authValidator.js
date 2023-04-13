@@ -27,6 +27,7 @@ exports.signupValidator = [
 
 exports.varifyCodeValidator = [
   body('resetCode').notEmpty().withMessage('Reset code is required'),
+  body('email').notEmpty().withMessage('E-mail is requied'),
   validatorMiddleWare,
 ]
 
