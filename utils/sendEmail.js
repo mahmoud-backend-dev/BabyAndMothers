@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const asyncHandler = require('express-async-handler');
+
 const transportet = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,

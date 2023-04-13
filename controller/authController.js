@@ -4,7 +4,7 @@ const { CustomErrorAPI, BadRequest, NotFoundError } = require('../errors');
 const asyncHandler = require('express-async-handler');
 const sendEmail = require('../utils/sendEmail');
 const User = require('../models/User');
-const {santizeData} = require('../utils/santizeData')
+const { santizeData } = require('../utils/santizeData');
 
 const hashedResetCodeByCrypto = (resetCode) => crypto.createHash('sha256').update(resetCode).digest('hex');
 
@@ -18,7 +18,7 @@ exports.allowTo = (...roles) => (asyncHandler(async (req, res, next) => {
   next()
 }))
 
-let data = {};
+
 // @desc Signup
 // @route POST api/v1/auth/signup
 // @protect Public
