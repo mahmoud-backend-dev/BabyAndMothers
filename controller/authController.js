@@ -55,7 +55,7 @@ exports.signup = asyncHandler(async (req, res, next) => {
 exports.varifyResetCodeForSignup = asyncHandler(async (req, res, next) => {
   const hashedResetCode = hashedResetCodeByCrypto(req.body.resetCode);
 
-  if (data.hashedResetCodeForSignup !== hashedResetCode)
+  if ((data.hashedResetCodeForSignup !== hashedResetCode) || (data.resetCodeExpiredForSignup < Date.now()))
     throw new BadRequest('Reset code invalid or expired')
   
   data.hashedResetCodeForSignup = undefined;
