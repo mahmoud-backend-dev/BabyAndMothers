@@ -1,7 +1,7 @@
 const multer = require('multer');
 const { BadRequest } = require('../errors');
 const cloudinary = require('cloudinary').v2;
-const asyncHandler = require('express-async-handler');
+
 const fs = require('fs');
 
 const multerOptions = (pathStoreImage) => {

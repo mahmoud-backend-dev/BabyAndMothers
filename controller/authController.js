@@ -18,11 +18,12 @@ exports.allowTo = (...roles) => (asyncHandler(async (req, res, next) => {
   next()
 }))
 
+let data = {};
 // @desc Signup
 // @route POST api/v1/auth/signup
 // @protect Public
 exports.signup = asyncHandler(async (req, res, next) => {
-  const user = await User(req.body);
+  const user = req.body
   // Generate reset code 
   const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
   // hash reset code than store in db
@@ -44,30 +45,23 @@ exports.signup = asyncHandler(async (req, res, next) => {
     user.hashedResetCodeForSignup = undefined;
     user.resetCodeExpiredForSignup = undefined;
     user.resetVerifyForSignup = undefined;
-    await user.save();
+    data = user
     throw new CustomErrorAPI('There is an error in sending email', StatusCodes.INTERNAL_SERVER_ERROR);
   }
-  await user.save();
+  data = user
   res.status(StatusCodes.CREATED).json({ status: 'Success', message: 'Reset code sent to email' });
 });
 
 exports.varifyResetCodeForSignup = asyncHandler(async (req, res, next) => {
   const hashedResetCode = hashedResetCodeByCrypto(req.body.resetCode);
-  const user = await User.findOne({
-    hashedResetCodeForSignup: hashedResetCode,
-    resetCodeExpiredForSignup: { $gt: Date.now() }
-  });
 
-  if (!user)
+  if (data.hashedResetCodeForSignup !== hashedResetCode)
     throw new BadRequest('Reset code invalid or expired')
   
-  await User.updateOne(
-    { email: user.email },
-    {
-      hashedResetCodeForSignup: null,
-      resetCodeExpiredForSignup: null,
-      resetVerifyForSignup: true
-    });
+  data.hashedResetCodeForSignup = undefined;
+  data.resetCodeExpiredForSignup = undefined;
+  data.resetVerifyForSignup = true;
+  const user = await User.create(data);
   const token = user.createJWT()
   res.status(StatusCodes.OK).json({ message: "Success", token, data: santizeData(user) });
 });
