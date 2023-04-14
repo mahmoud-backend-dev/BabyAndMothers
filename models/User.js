@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Last namr is required'],
   },
+  role: {
+    type: String,
+    default: "user",
+    enum: ['user', 'manager', 'admin']
+  },
   hashedResetCodeForSignup: String,
   resetCodeExpiredForSignup:Date,
   resetVerifyForSignup: Boolean,
