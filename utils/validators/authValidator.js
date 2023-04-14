@@ -5,13 +5,7 @@ const User = require('../../models/User');
 
 exports.signupValidator = [
   body('email').notEmpty().withMessage('E-mail is requied')
-    .isEmail().withMessage('E-mail must be valid format')
-    .custom(async (val) => {
-      const user = await User.findOne({ email: val });
-      if (user)
-        throw new BadRequest('This E-mail is used choose anthor email')
-      return true;
-    }),
+    .isEmail().withMessage('E-mail must be valid format'),
   body('password').notEmpty().withMessage('Password is requied')
     .isLength({ min: 6 }).withMessage('Too short password'),
     body('confirmPassword').notEmpty().withMessage('Confirm password is requied')
@@ -27,7 +21,8 @@ exports.signupValidator = [
 
 exports.varifyCodeValidator = [
   body('resetCode').notEmpty().withMessage('Reset code is required'),
-  body('email').notEmpty().withMessage('E-mail is requied'),
+  body('email').notEmpty().withMessage('E-mail is requied').
+    isEmail().withMessage('E-mail must be valid format'), 
   validatorMiddleWare,
 ]
 

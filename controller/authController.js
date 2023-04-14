@@ -23,32 +23,61 @@ exports.allowTo = (...roles) => (asyncHandler(async (req, res, next) => {
 // @route POST api/v1/auth/signup
 // @protect Public
 exports.signup = asyncHandler(async (req, res, next) => {
-  const user = new User(req.body);
-  // Generate reset code 
-  const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-  // hash reset code than store in db
-  const hashedResetCode = hashedResetCodeByCrypto(resetCode);
-  user.hashedResetCodeForSignup = hashedResetCode;
-  user.resetCodeExpiredForSignup = Date.now() + 10 * 60 * 1000;
-  user.resetVerifyForSignup = false;
-  // Send reset code to email for varification
-  const mailOpts = {
-    from: `Mahmod Hamdi <mh15721812@gmail.com>`,
-    to: user.email,
-    subject: `Your reset code for register our app (valid for 10 min)`,
-    text: `Hi ${user.firstName}
+  let user = await User.findOne({ email: req.body.email });
+  if (user) {
+        // Generate reset code 
+        const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        // hash reset code than store in db
+        const hashedResetCode = hashedResetCodeByCrypto(resetCode);
+        user.hashedResetCodeForSignup = hashedResetCode;
+        user.resetCodeExpiredForSignup = Date.now() + 10 * 60 * 1000;
+        user.resetVerifyForSignup = false;
+        // Send reset code to email for varification
+        const mailOpts = {
+          from: `Mahmod Hamdi <mh15721812@gmail.com>`,
+          to: user.email,
+          subject: `Your reset code for register our app (valid for 10 min)`,
+          text: `Hi ${user.firstName}
+        G-${resetCode}  is your varification code for register our app ( Babies And Mothers Application)`
+        };
+        try {
+          await sendEmail(mailOpts);
+        } catch (error) {
+          user.hashedResetCodeForSignup = undefined;
+          user.resetCodeExpiredForSignup = undefined;
+          user.resetVerifyForSignup = undefined;
+          await user.save();
+          throw new CustomErrorAPI('There is an error in sending email', StatusCodes.INTERNAL_SERVER_ERROR);
+        }
+        await user.save();
+  } else {
+    user = new User(req.body);
+    // Generate reset code 
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    // hash reset code than store in db
+    const hashedResetCode = hashedResetCodeByCrypto(resetCode);
+    user.hashedResetCodeForSignup = hashedResetCode;
+    user.resetCodeExpiredForSignup = Date.now() + 10 * 60 * 1000;
+    user.resetVerifyForSignup = false;
+    // Send reset code to email for varification
+    const mailOpts = {
+      from: `Mahmod Hamdi <mh15721812@gmail.com>`,
+      to: user.email,
+      subject: `Your reset code for register our app (valid for 10 min)`,
+      text: `Hi ${user.firstName}
     G-${resetCode}  is your varification code for register our app ( Babies And Mothers Application)`
-  };
-  try {
-    await sendEmail(mailOpts);
-  } catch (error) {
-    user.hashedResetCodeForSignup = undefined;
-    user.resetCodeExpiredForSignup = undefined;
-    user.resetVerifyForSignup = undefined;
+    };
+    try {
+      await sendEmail(mailOpts);
+    } catch (error) {
+      user.hashedResetCodeForSignup = undefined;
+      user.resetCodeExpiredForSignup = undefined;
+      user.resetVerifyForSignup = undefined;
+      await user.save();
+      throw new CustomErrorAPI('There is an error in sending email', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
     await user.save();
-    throw new CustomErrorAPI('There is an error in sending email', StatusCodes.INTERNAL_SERVER_ERROR);
   }
-  await user.save();
   res.status(StatusCodes.CREATED).json({ status: 'Success', message: 'Reset code sent to email' });
 });
 
