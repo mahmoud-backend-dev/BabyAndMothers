@@ -94,6 +94,7 @@ exports.varifyResetCodeForSignup = asyncHandler(async (req, res, next) => {
   user.hashedResetCodeForSignup = undefined;
   user.resetCodeExpiredForSignup = undefined;
   user.resetVerifyForSignup = true;
+  await user.save();
   const token = user.createJWT()
   res.status(StatusCodes.OK).json({ message: "Success", token, data: santizeData(user) });
 });
