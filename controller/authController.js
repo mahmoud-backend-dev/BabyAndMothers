@@ -101,7 +101,7 @@ exports.varifyResetCodeForSignup = asyncHandler(async (req, res, next) => {
   await user.save();
   await user.hashedPassword();
   const token = user.createJWT()
-  res.status(StatusCodes.OK).json({ message: "Success", token, data: santizeData(user) });
+  res.status(StatusCodes.CREATED).json({ message: "Success", token, data: santizeData(user) });
 });
 
 exports.resendRestCodeForSignup = asyncHandler(async (req, res) => {
@@ -171,10 +171,10 @@ exports.resendRestCodeForPassword = asyncHandler(async (req, res) => {
 
 exports.login = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
+  if (!user)
+  throw new NotFoundError(`No user such as this email: ${req.body.email}`);
   if (user.hashedResetCodeForSignup)
     throw new BadRequest('Verifiy reset code before login')
-  if (!user)
-    throw new NotFoundError(`No user such as this email: ${req.body.email}`);
   const isMatch = await user.comparePassword(req.body.password);
   if (!user || !isMatch)
     throw new BadRequest('E-mail or Password incorrect');
