@@ -24,7 +24,7 @@ exports.allowTo = (...roles) => (asyncHandler(async (req, res, next) => {
 // @protect Public
 exports.signup = asyncHandler(async (req, res, next) => {
   let user = await User.findOne({ email: req.body.email });
-  if (user) {
+  if (user && !user.resetVerifyForSignup) {
         // Generate reset code 
         const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
         // hash reset code than store in db
@@ -46,11 +46,13 @@ exports.signup = asyncHandler(async (req, res, next) => {
           user.hashedResetCodeForSignup = undefined;
           user.resetCodeExpiredForSignup = undefined;
           user.resetVerifyForSignup = undefined;
+          await user.updateOne(req.body);
           await user.save();
           throw new CustomErrorAPI('There is an error in sending email', StatusCodes.INTERNAL_SERVER_ERROR);
         }
+        await user.updateOne(req.body);
         await user.save();
-  } else {
+  } else if(!user) {
     user = new User(req.body);
     // Generate reset code 
     const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -77,8 +79,10 @@ exports.signup = asyncHandler(async (req, res, next) => {
       throw new CustomErrorAPI('There is an error in sending email', StatusCodes.INTERNAL_SERVER_ERROR);
     }
     await user.save();
+  } else {
+    throw new BadRequest('Email is used choose anther email')
   }
-  res.status(StatusCodes.CREATED).json({ status: 'Success', message: 'Reset code sent to email' });
+  res.status(StatusCodes.OK).json({ status: 'Success', message: 'Reset code sent to email' });
 });
 
 exports.varifyResetCodeForSignup = asyncHandler(async (req, res, next) => {
