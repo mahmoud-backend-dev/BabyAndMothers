@@ -95,6 +95,7 @@ exports.varifyResetCodeForSignup = asyncHandler(async (req, res, next) => {
   user.resetCodeExpiredForSignup = undefined;
   user.resetVerifyForSignup = true;
   await user.save();
+  await user.hashedPassword();
   const token = user.createJWT()
   res.status(StatusCodes.OK).json({ message: "Success", token, data: santizeData(user) });
 });
@@ -241,6 +242,7 @@ exports.resetPassword = asyncHandler(async (req, res) => {
   user.resetCodeExpiredForPassword = null;
   user.resetVerifyForPassword = undefined;
   await user.save();
+  await user.hashedPassword();
   const token = user.createJWT();
   res.status(StatusCodes.OK).json({ token, data: santizeData(user) });
 })
